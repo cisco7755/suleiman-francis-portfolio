@@ -5,20 +5,17 @@
  * Usage: npm run build && npm run resume:pdf
  * Needs a Chromium build for playwright-core (`npx playwright install chromium`).
  */
+import { spawn } from 'node:child_process';
 import { copyFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright-core';
-import { startStaticServer } from './static-server.mjs';
 
 const PORT = 4319;
 const root = fileURLToPath(new URL('..', import.meta.url));
 const output = `${root}public/resume/Suleiman-Francis-Resume.pdf`;
 const extraCopy = process.argv[2]; // optional: also copy the PDF here
 
-const server = await startStaticServer({
-  port: PORT,
-  outDir: fileURLToPath(new URL('../out/', import.meta.url)),
-});
+const server = spawn('npx', ['next', 'start', '-p', String(PORT)], { cwd: root, stdio: 'ignore' });
 
 async function waitForServer(url, attempts = 40) {
   for (let i = 0; i < attempts; i++) {
@@ -47,6 +44,5 @@ try {
     console.log(`Copied to ${extraCopy}`);
   }
 } finally {
-  server.closeAllConnections();
-  server.close();
+  server.kill();
 }

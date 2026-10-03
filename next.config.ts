@@ -1,13 +1,22 @@
 import type { NextConfig } from 'next';
 
+const securityHeaders = [
+  { key: 'X-Content-Type-Options', value: 'nosniff' },
+  { key: 'X-Frame-Options', value: 'DENY' },
+  { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+  {
+    key: 'Permissions-Policy',
+    value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
+  },
+];
+
 const nextConfig: NextConfig = {
-  // Static HTML for Cloudflare Pages. Security headers live in public/_headers
-  // because an export has no server to apply next.config headers.
-  output: 'export',
   poweredByHeader: false,
   images: {
-    // The default loader needs a Next server. Pages serves the original files.
-    unoptimized: true,
+    formats: ['image/avif', 'image/webp'],
+  },
+  async headers() {
+    return [{ source: '/:path*', headers: securityHeaders }];
   },
 };
 

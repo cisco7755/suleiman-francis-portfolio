@@ -5,7 +5,6 @@ import { ogSize, renderOgImage } from '@/lib/og';
 export const alt = 'Case study by Suleiman Francis';
 export const size = ogSize;
 export const contentType = 'image/png';
-export const dynamic = 'force-static';
 
 export function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }));

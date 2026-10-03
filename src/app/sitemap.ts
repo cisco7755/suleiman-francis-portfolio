@@ -3,8 +3,6 @@ import { disciplines } from '@/content/engineering';
 import { projects } from '@/content/projects';
 import { absoluteUrl } from '@/lib/site';
 
-export const dynamic = 'force-static';
-
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes = [
     '/',

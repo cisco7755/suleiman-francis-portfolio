@@ -10,8 +10,8 @@ backend and no animation or UI library.
 npm install
 npm run dev          # http://localhost:3000
 npm run check        # lint + typecheck + tests — run before every push
-npm run build        # static export to out/ (all routes prerendered)
-npm start            # serve out/ locally (next start cannot run an export)
+npm run build        # production build (all routes prerendered)
+npm start            # serve the production build
 npm run format       # Prettier (with Tailwind class sorting)
 npm run resume:pdf   # after a build: regenerate public/resume PDF from /resume
 ```
@@ -82,25 +82,19 @@ no personal data). Events: `portfolio_view`, `project_open`, `case_study_view`, 
 `trackingAttributes(event, props)`; props carry only slugs and link sources. To switch provider, change
 `src/lib/analytics/client.ts`.
 
-## Deployment (Cloudflare Pages)
+## Deployment (Vercel)
 
-The site is a static export (`output: 'export'` in `next.config.ts`). Cloudflare Pages serves `out/`.
-There is no Node server in production, so `next/image` ships the original files (`images.unoptimized`)
-and response headers come from `public/_headers`.
+The GitHub repository is connected to Vercel. Pushes to `main` deploy to production. Pull requests get
+preview deployments. Node 22 is pinned in `.node-version`.
 
-1. In the Cloudflare dashboard, create a Pages project and import this repository.
-2. Framework preset: **Next.js (Static HTML Export)**. Build command: `npx next build`. Output directory: `out`.
-   Node 22 is pinned in `.node-version`.
-3. Set `NEXT_PUBLIC_SITE_URL` to the production origin (e.g. `https://suleimanfrancis.com`) **before the first
-   production build**. It is inlined at build time into canonical URLs, the sitemap and JSON-LD. Add it under
-   Settings → Environment variables for Production (and Preview, if previews should share that origin).
-4. Optionally set `NEXT_PUBLIC_PLAUSIBLE_DOMAIN`.
-5. Attach the custom domain under the Pages project’s Custom domains settings.
+GitHub Actions (`.github/workflows/ci.yml`) runs lint, typecheck, tests and a production build on every
+pull request and on `main`.
 
-Each push to the production branch rebuilds and deploys. Pull requests get preview URLs on `*.pages.dev`.
+Set `NEXT_PUBLIC_SITE_URL` in the Vercel project to the production origin (e.g. `https://suleimanfrancis.com`).
+Without it, canonical URLs fall back to `VERCEL_PROJECT_PRODUCTION_URL`. Optionally set
+`NEXT_PUBLIC_PLAUSIBLE_DOMAIN`.
 
-Security headers (`nosniff`, `DENY` framing, referrer and permissions policies) are in `public/_headers`.
-Hashed files under `/_next/static/` are cached for a year.
+Security headers (`nosniff`, `DENY` framing, referrer and permissions policies) are set in `next.config.ts`.
 
 ## Verified at handoff (October 2026)
 
