@@ -1,36 +1,111 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Suleiman Francis — portfolio
 
-## Getting Started
+Personal portfolio for Suleiman Francis, Software Engineer (frontend, backend, mobile, AI).
+Next.js 16 App Router, TypeScript, Tailwind CSS v4. Every route is statically generated; there is no
+backend and no animation or UI library.
 
-First, run the development server:
+## Commands
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev          # http://localhost:3000
+npm run check        # lint + typecheck + tests — run before every push
+npm run build        # static export to out/ (all routes prerendered)
+npm start            # serve out/ locally (next start cannot run an export)
+npm run format       # Prettier (with Tailwind class sorting)
+npm run resume:pdf   # after a build: regenerate public/resume PDF from /resume
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`npm run typecheck` runs `next typegen` first so the global `PageProps` / `LayoutProps` route types exist
+on a clean checkout.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Editing content
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+All copy lives in typed data under `src/content/`. Pages never hardcode project, experience or skill text.
 
-## Learn More
+| File              | What it holds                                                                              |
+| ----------------- | ------------------------------------------------------------------------------------------ |
+| `profile.ts`      | Name, contact details, links, bio, principles, résumé file                                 |
+| `projects/`       | One file per case study; `projects/index.ts` sets order and which four are featured        |
+| `experience.ts`   | Roles, most recent first                                                                   |
+| `capabilities.ts` | Skills by discipline, the credibility strip, the approach loop and the production pipeline |
+| `engineering.ts`  | One write-up per discipline (`/engineering/[discipline]`)                                  |
+| `types.ts`        | The content model                                                                          |
 
-To learn more about Next.js, take a look at the following resources:
+**Adding a case study:** add a file to `src/content/projects/` and list it in `projects/index.ts`. The card, case-study page, Open Graph image,
+sitemap entry and JSON-LD all follow automatically. The tests check it fills every template section.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Updating the résumé:** edit the content files, then `npm run build && npm run resume:pdf`. The PDF is rendered from `/resume` with the site’s print styles, so the web résumé and the PDF always match. Pass a path to also copy it, e.g. `npm run resume:pdf -- ../cv/originals/Suleiman_Francis_CV.pdf`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Evidence rules (enforced by `src/test/content.test.ts`)
 
-## Deploy on Vercel
+- Every metric declares a `basis`: `measured`, `estimate`, `superseded` or `unavailable`. The UI always
+  shows it next to the value.
+- Estimates must say “estimate” in their note. Unavailable metrics have a `null` value and say
+  “Impact metric unavailable” — never invent a number.
+- Banned marketing words (“passionate”, “seamless”, “cutting-edge”, …) fail `npm run check`.
+- Employer-owned products (SeamHealth) show no screenshots, only sanitised diagrams.
+- Screenshots must exist and have descriptive alt text. The Whistler screenshots in `public/work/` have
+  other people’s names, avatars and messages redacted — keep it that way for any new capture.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Architecture
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+src/
+  app/                 routes, metadata, sitemap, robots, OG images, 404, error boundary
+  components/
+    layout/            header, mobile nav, footer, page intro, skip link
+    sections/          homepage and shared page sections
+    work/              project card, case-study renderer, diagrams, decision records, timeline
+    ui/                primitives: Button(Link), Tag, Metric, Prose, CodeBlock, SafeImage, …
+    analytics/         one delegated click listener
+  content/             typed content (see above)
+  lib/                 site config, metadata + JSON-LD builders, analytics, content lookups
+  test/                Vitest suites
+```
+
+- **Design tokens** are CSS custom properties in `src/app/globals.css`, mapped into Tailwind with
+  `@theme`. Components use semantic roles (`bg-surface`, `text-fg-muted`, `border-line`, `text-accent`),
+  never raw colours. Each colour is defined once with `light-dark()`. Themes follow the OS by default; the
+  header toggle saves an explicit choice to `localStorage`, and an inline script in `<head>` applies it
+  before first paint (no flash). Every text role passes WCAG AA on every surface in both themes.
+- **Client JavaScript** is limited to the theme toggle, the mobile menu, active nav state, the copy-email button, the
+  image fallback and the analytics listener. Everything else is server-rendered HTML.
+- **Diagrams** are semantic HTML lists rather than images, so they reflow on small screens and read in
+  order with a screen reader.
+
+## Analytics
+
+Off by default. Set `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` to enable [Plausible](https://plausible.io) (cookieless,
+no personal data). Events: `portfolio_view`, `project_open`, `case_study_view`, `resume_download`,
+`contact_click`, `github_click`, `linkedin_click`, `email_click`. Server components opt in with
+`trackingAttributes(event, props)`; props carry only slugs and link sources. To switch provider, change
+`src/lib/analytics/client.ts`.
+
+## Deployment (Cloudflare Pages)
+
+The site is a static export (`output: 'export'` in `next.config.ts`). Cloudflare Pages serves `out/`.
+There is no Node server in production, so `next/image` ships the original files (`images.unoptimized`)
+and response headers come from `public/_headers`.
+
+1. In the Cloudflare dashboard, create a Pages project and import this repository.
+2. Framework preset: **Next.js (Static HTML Export)**. Build command: `npx next build`. Output directory: `out`.
+   Node 22 is pinned in `.node-version`.
+3. Set `NEXT_PUBLIC_SITE_URL` to the production origin (e.g. `https://suleimanfrancis.com`) **before the first
+   production build**. It is inlined at build time into canonical URLs, the sitemap and JSON-LD. Add it under
+   Settings → Environment variables for Production (and Preview, if previews should share that origin).
+4. Optionally set `NEXT_PUBLIC_PLAUSIBLE_DOMAIN`.
+5. Attach the custom domain under the Pages project’s Custom domains settings.
+
+Each push to the production branch rebuilds and deploys. Pull requests get preview URLs on `*.pages.dev`.
+
+Security headers (`nosniff`, `DENY` framing, referrer and permissions policies) are in `public/_headers`.
+Hashed files under `/_next/static/` are cached for a year.
+
+## Verified at handoff (October 2026)
+
+- `npm run check` and `npm run build` pass with no warnings; 33 routes prerendered (25 at the first handoff).
+- Lighthouse (mobile, simulated throttling): home 96 / 100 / 100 / 100; Whistler case study
+  97 / 100 / 100 / 100 (performance / accessibility / best practices / SEO). CLS 0.
+- No horizontal overflow at 375–1440 px; keyboard order, skip link, visible focus, one `h1` per page and no
+  skipped heading levels checked with Playwright.
