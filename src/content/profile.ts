@@ -10,7 +10,7 @@ export const profile = {
   timezone: 'West Africa Time (UTC+1)',
   availability: 'Available for opportunities',
   yearsExperience: '4+',
-  email: 'Francis.suleiman31@gmail.com',
+  email: 'Francis.dev31@gmail.com',
   phone: { display: '+234 903 610 1623', href: 'tel:+2349036101623' },
   positioning: 'Software Engineer building production web, mobile, and AI-powered products.',
   headline: 'Building production web, mobile, and AI-powered products.',
@@ -21,8 +21,8 @@ export const profile = {
     github: 'https://github.com/cisco7755',
   },
   resume: {
-    href: '/resume/Suleiman-Francis-Resume.pdf',
-    format: 'PDF, 2 pages',
+    href: '/resume/Suleiman_Francis_CV.pdf',
+    format: 'PDF, 3 pages',
   },
   education: [
     {
@@ -37,7 +37,13 @@ export const profile = {
     },
   ],
   resumeSummary:
-    'Software Engineer with 4+ years of experience designing, building and shipping production web, mobile and backend software: Angular, React, Next.js and TypeScript on the frontend; REST services on Node.js and Python (FastAPI); cross-platform mobile with React Native and Flutter; and LLM evaluation and RLHF — prompt design, rubric-based review, and human feedback on model responses. Lead engineer on Whistler’s mobile app, web client and admin dashboard; frontend engineer on SeamHealth’s Clientshot platform.',
+    'Software Engineer with 4+ years of experience (since 2022) designing, building and shipping production web, mobile and backend software: Angular, React, Next.js and TypeScript on the frontend; REST services on Node.js and Python (FastAPI); cross-platform mobile with React Native and Flutter; and LLM evaluation and RLHF — prompt design, rubric-based review, and human feedback on model responses. Lead engineer on Whistler’s mobile app, web client and admin dashboard (sole engineer on the web client); lead engineer on SeamHealth’s Clientshot Public.',
+  resumeInterests: [
+    'Continuous learning',
+    'Open source collaboration',
+    'AI systems and model behaviour',
+    'Technical writing',
+  ],
   bio: [
     'I’m a Software Engineer focused on building production web, mobile, and AI-powered products.',
     'My work spans frontend, backend, mobile development, and AI integration, with a focus on turning complex requirements into reliable, maintainable software.',

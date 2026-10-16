@@ -13,7 +13,6 @@ npm run check        # lint + typecheck + tests — run before every push
 npm run build        # production build (all routes prerendered)
 npm start            # serve the production build
 npm run format       # Prettier (with Tailwind class sorting)
-npm run resume:pdf   # after a build: regenerate public/resume PDF from /resume
 ```
 
 `npm run typecheck` runs `next typegen` first so the global `PageProps` / `LayoutProps` route types exist
@@ -35,7 +34,7 @@ All copy lives in typed data under `src/content/`. Pages never hardcode project,
 **Adding a case study:** add a file to `src/content/projects/` and list it in `projects/index.ts`. The card, case-study page, Open Graph image,
 sitemap entry and JSON-LD all follow automatically. The tests check it fills every template section.
 
-**Updating the résumé:** edit the content files, then `npm run build && npm run resume:pdf`. The PDF is rendered from `/resume` with the site’s print styles, so the web résumé and the PDF always match. Pass a path to also copy it, e.g. `npm run resume:pdf -- ../cv/originals/Suleiman_Francis_CV.pdf`.
+**Updating the résumé:** the download is the PDF in `public/resume/Suleiman_Francis_CV.pdf`, exported from the CV document — replace that file to update it. The web résumé at `/resume` renders from `profile.ts`, `experience.ts` and `capabilities.ts`; update those to match.
 
 ### Evidence rules (enforced by `src/test/content.test.ts`)
 

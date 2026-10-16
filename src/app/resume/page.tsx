@@ -131,6 +131,13 @@ export default function ResumePage() {
             </p>
           ))}
         </section>
+
+        <section aria-labelledby="resume-interests" className="mt-8 border-t border-line pt-8">
+          <h3 id="resume-interests" className="meta mb-3">
+            Interests
+          </h3>
+          <p className="text-body text-fg-secondary">{profile.resumeInterests.join(' · ')}</p>
+        </section>
       </div>
     </Container>
   );

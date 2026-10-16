@@ -43,7 +43,7 @@ export const whistlerWeb: Project = {
   summary:
     'Next.js web client for Whistler: 52 routes across feed, communities, moments, messages and settings, sharing the mobile app’s API, tokens and error handling.',
   metaDescription:
-    'Case study: Whistler Web, a Next.js 16 client built by Suleiman Francis — server-side route protection, a static public surface, an in-browser sentence-embedding classifier, Playwright e2e against a mock API, and signed Docker images.',
+    'Case study: Whistler Web, a Next.js 16 client built by Suleiman Francis — server-side route protection, a static public surface, an in-browser embedding classifier, Playwright e2e against a mock API and signed Docker images.',
   role: 'Sole engineer',
   timeline: 'Sep 2026 — Present · in active development',
   team: 'Sole engineer; the backend API is shared with the mobile app.',
@@ -271,7 +271,7 @@ export const whistlerWeb: Project = {
           label: 'Classifier accuracy',
           basis: 'unavailable',
           value: null,
-          note: 'Not evaluated yet. The thresholds were set by hand, not tuned on labelled posts.',
+          note: 'Impact metric unavailable — not evaluated yet. The thresholds were set by hand, not tuned on labelled posts.',
         },
         {
           label: 'Active users',
