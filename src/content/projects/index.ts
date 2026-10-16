@@ -3,6 +3,7 @@ import { clientshot } from './clientshot';
 import { clientshotPublic } from './clientshot-public';
 import { deviceIntelligence } from './device-intelligence';
 import { elsrt } from './elsrt';
+import { llmEvaluation } from './llm-evaluation';
 import { seamhealthBlog } from './seamhealth-blog';
 import { whistlerAdmin } from './whistler-admin';
 import { whistlerMobile } from './whistler-mobile';
@@ -21,6 +22,7 @@ export const projects: Project[] = [
   clientshotPublic,
   seamhealthBlog,
   elsrt,
+  llmEvaluation,
 ];
 
 export const featuredProjects = projects.filter((project) => project.featured);

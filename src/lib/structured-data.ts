@@ -33,6 +33,7 @@ export function personSchema() {
       'Node.js',
       'Machine learning',
       'LLM evaluation',
+      'RLHF',
     ],
   };
 }

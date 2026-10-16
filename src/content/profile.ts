@@ -22,7 +22,7 @@ export const profile = {
   },
   resume: {
     href: '/resume/Suleiman-Francis-Resume.pdf',
-    format: 'PDF, 3 pages',
+    format: 'PDF, 2 pages',
   },
   education: [
     {
@@ -30,9 +30,14 @@ export const profile = {
       qualification: 'B.Sc. Computer Science',
       year: '2023',
     },
+    {
+      institution: 'Priestly College, Romi, Kaduna',
+      qualification: 'WASSCE',
+      year: '2016',
+    },
   ],
   resumeSummary:
-    'Software Engineer with 4+ years of experience designing, building and shipping production web, mobile and backend software: Angular, React, Next.js and TypeScript on the frontend; REST services on Node.js and Python (FastAPI); cross-platform mobile with React Native and Flutter; and practical work integrating and evaluating AI/LLM features. Lead engineer on Whistler’s mobile app, web client and admin dashboard; frontend engineer on SeamHealth’s Clientshot platform.',
+    'Software Engineer with 4+ years of experience designing, building and shipping production web, mobile and backend software: Angular, React, Next.js and TypeScript on the frontend; REST services on Node.js and Python (FastAPI); cross-platform mobile with React Native and Flutter; and LLM evaluation and RLHF — prompt design, rubric-based review, and human feedback on model responses. Lead engineer on Whistler’s mobile app, web client and admin dashboard; frontend engineer on SeamHealth’s Clientshot platform.',
   bio: [
     'I’m a Software Engineer focused on building production web, mobile, and AI-powered products.',
     'My work spans frontend, backend, mobile development, and AI integration, with a focus on turning complex requirements into reliable, maintainable software.',
@@ -64,7 +69,7 @@ export const profile = {
     },
     {
       title: 'Write it down',
-      body: 'Acceptance criteria and documentation are part of the feature. They are how the next engineer — often me — understands why the code looks the way it does.',
+      body: 'Acceptance criteria and documentation are part of the feature. They are how the next engineer often me  understands why the code looks the way it does.',
     },
   ],
 } as const;

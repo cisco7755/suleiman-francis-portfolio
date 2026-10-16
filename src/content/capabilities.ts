@@ -16,6 +16,8 @@ export const capabilities: Capability[] = [
       'Tailwind CSS',
       'Redux Toolkit',
       'TanStack Query',
+      'Zustand',
+      'RxJS',
       'Component architecture',
       'Accessibility',
       'Responsive systems',
@@ -64,11 +66,14 @@ export const capabilities: Capability[] = [
     id: 'ai',
     label: 'AI / LLM',
     evidence:
-      'The on-device fastText classifier in Whistler; LLM prompt design and rubric-based response evaluation at SeamHealth.',
+      'Two Whistler post classifiers: an on-device fastText model in the app, and sentence embeddings (all-MiniLM-L6-v2, ONNX Runtime Web) in the browser; LLM evaluation and RLHF at SeamHealth — prompt design, rubric-based review, data annotation and human feedback on model responses.',
     skills: [
+      'LLM evaluation',
+      'RLHF',
       'OpenAI and Anthropic APIs',
       'Prompt engineering',
       'Response evaluation',
+      'Data annotation',
       'RAG fundamentals',
       'Hallucination detection',
       'On-device classification',
@@ -181,6 +186,6 @@ export const signals: { label: string; value: string; detail: string }[] = [
   { label: 'Web', value: 'React · Angular', detail: 'Dashboards, forms, component libraries' },
   { label: 'Mobile', value: 'React Native', detail: 'Live on Google Play' },
   { label: 'Backend', value: 'Node.js · Python', detail: 'APIs, auth, realtime, risk scoring' },
-  { label: 'AI / LLM', value: 'On-device ML', detail: 'And LLM response evaluation' },
+  { label: 'AI / LLM', value: 'LLM evaluation', detail: 'Rubrics, data annotation and RLHF' },
   { label: 'Production', value: 'Observed', detail: 'Sentry, analytics, staged releases' },
 ];

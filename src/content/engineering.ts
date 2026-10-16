@@ -157,7 +157,7 @@ export const disciplines: DisciplinePage[] = [
     label: 'AI / LLM',
     title: 'Building practical AI features',
     description:
-      'How Suleiman Francis builds AI features: choosing between LLMs and small models, latency, cost, privacy, fallback behaviour, and evaluating honestly — including a classifier whose 99% score didn’t hold up.',
+      'How Suleiman Francis builds AI features: choosing between LLMs and small models, latency, cost, privacy, fallback behaviour, LLM evaluation and RLHF, and evaluating honestly — including a classifier whose 99% score didn’t hold up.',
     essay: {
       title: 'Building practical AI features',
       summary:
@@ -167,7 +167,7 @@ export const disciplines: DisciplinePage[] = [
           heading: 'Match the model to the task',
           paragraphs: [
             'Mapping a post to one of 30 fixed categories is classification, not generation. A hosted LLM would handle nuance well, but it costs money per post, adds latency and a network dependency, and sends user text to a third party. For Whistler I trained a fastText model and run it on the device in plain JavaScript: offline, private, and cheap enough to run on every post.',
-            'Generative tasks — drafting, summarising, open-ended answers — are where LLM APIs earn their cost. At SeamHealth I worked on that side: prompt design, and evaluating responses against rubrics.',
+            'Generative tasks — drafting, summarising, open-ended answers — are where LLM APIs earn their cost. At SeamHealth that work is LLM evaluation and RLHF: prompt design, reviewing responses against rubrics, and human feedback that labels what failed.',
           ],
         },
         {
@@ -180,7 +180,7 @@ export const disciplines: DisciplinePage[] = [
           heading: 'Design the fallback',
           paragraphs: [
             'The Whistler classifier returns “uncategorised” when the input has fewer than two tokens, when no words are recognised, or when the top probability is below 0.35. A missing category is a minor inconvenience; a confidently wrong one puts a post in front of the wrong community.',
-            'With LLMs, the equivalent is detecting hallucinations and inconsistencies before they reach users — part of the rubric-based evaluation work I did at SeamHealth.',
+            'With LLMs, the equivalent is detecting hallucinations and inconsistencies before they reach users — the LLM evaluation and RLHF work I did at SeamHealth.',
           ],
         },
         {

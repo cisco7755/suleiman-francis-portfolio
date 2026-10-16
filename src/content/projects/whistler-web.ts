@@ -43,7 +43,7 @@ export const whistlerWeb: Project = {
   summary:
     'Next.js web client for Whistler: 52 routes across feed, communities, moments, messages and settings, sharing the mobile app’s API, tokens and error handling.',
   metaDescription:
-    'Case study: Whistler Web, a Next.js 16 client built by Suleiman Francis — server-side route protection, a static public surface, Playwright e2e against a mock API, and signed Docker images.',
+    'Case study: Whistler Web, a Next.js 16 client built by Suleiman Francis — server-side route protection, a static public surface, an in-browser sentence-embedding classifier, Playwright e2e against a mock API, and signed Docker images.',
   role: 'Sole engineer',
   timeline: 'Sep 2026 — Present · in active development',
   team: 'Sole engineer; the backend API is shared with the mobile app.',
@@ -58,6 +58,7 @@ export const whistlerWeb: Project = {
     'TanStack Query',
     'React Hook Form',
     'Zod',
+    'ONNX Runtime Web',
     'Vitest',
     'Playwright',
     'Docker',
@@ -65,7 +66,7 @@ export const whistlerWeb: Project = {
     'Cloudflare Workers',
   ],
   tags: ['Next.js', 'TypeScript', 'Playwright', 'Docker', 'CI/CD'],
-  disciplines: ['frontend', 'backend'],
+  disciplines: ['frontend', 'backend', 'ai'],
   outcome:
     'Every change passes format, lint, types, unit tests, a dependency audit, Playwright e2e and a Docker smoke test before an image is published.',
   cover: { kind: 'showcase' },
@@ -80,6 +81,7 @@ export const whistlerWeb: Project = {
         'The whole web client — every human-authored commit in the repository is mine',
         'Architecture: route groups, server-side session guards, the API layer and the theme system',
         'Feature modules: core shell, communities, moments, news feed, messages and notifications',
+        'The in-browser post classifier: the model export script, a BERT tokenizer in TypeScript, on-device caching and the category matching',
         'Testing: 23 Vitest unit test files and a Playwright suite that runs against a local mock API',
         'CI/CD: GitHub Actions, the Docker image, GitHub Container Registry publishing, Cloudflare Workers deploys and Dependabot',
       ],
@@ -124,7 +126,10 @@ export const whistlerWeb: Project = {
         },
         {
           label: 'Features',
-          nodes: ['features/*/hooks — TanStack Query wrappers'],
+          nodes: [
+            'features/*/hooks — TanStack Query wrappers',
+            'Post classifier (ONNX Runtime Web, in the browser)',
+          ],
         },
         {
           label: 'API layer',
@@ -137,6 +142,7 @@ export const whistlerWeb: Project = {
         'Route groups split the app into a public surface, logged-out forms and the authenticated app — each with exactly one header implementation.',
         'Protected pages are checked on the server with requireSession(), so access control is real, not just hidden UI.',
         'Theme tokens are ported one-to-one from the mobile app and rendered as CSS custom properties, so both clients share names and values.',
+        'The post classifier runs entirely in the browser; post text never leaves the device to be categorised.',
       ],
     },
     decisions: [
@@ -174,6 +180,24 @@ export const whistlerWeb: Project = {
           'The landing page stays statically rendered; most users get the right theme with zero JavaScript.',
       },
       {
+        title: 'Match posts to category descriptions instead of porting the mobile model',
+        problem:
+          'The moment composer should suggest a category as the user types, like the mobile app. But the mobile app’s fastText model is trained on a fixed list of 30 categories, and the web client gets its category list from the API.',
+        options: [
+          'Port the mobile fastText model',
+          'Send the text to a hosted LLM',
+          'Compare sentence embeddings with short descriptions of each category',
+        ],
+        tradeoffs:
+          'The fastText model is small, but it can only predict the categories it was trained on, and adding one means retraining. An LLM adds cost, latency and a third party for every post. Embeddings work with any category list but need a much larger download: a 23 MB quantised all-MiniLM-L6-v2 model and a 14 MB WebAssembly runtime.',
+        decision:
+          'Run all-MiniLM-L6-v2 in the browser with ONNX Runtime Web and score each post against a few everyday descriptions per category. A category the classifier doesn’t know is matched on its own title.',
+        reason:
+          'A new or renamed category works without retraining anything, and the text stays on the device. The download only happens when someone starts writing, and only once.',
+        result:
+          'Suggestions work for any category list the API returns. Accuracy hasn’t been measured yet.',
+      },
+      {
         title: 'End-to-end tests against a mock backend',
         problem:
           'E2E tests that need a real account and network are slow, flaky and leak test data into production.',
@@ -194,6 +218,10 @@ export const whistlerWeb: Project = {
       {
         title: 'Forms',
         body: 'React Hook Form with Zod across nine forms: sign-in, registration, OTP, password reset and change, onboarding, profile, and support.',
+      },
+      {
+        title: 'Post classifier',
+        body: 'A script exports the model, vocabulary and runtime to content-hashed URLs, which the browser keeps in Cache Storage, so each version downloads once. A TypeScript port of the BERT tokenizer is tested against Transformers.js output. A check takes about a millisecond, 480 ms after typing stops. It only suggests a category when the post scores at least 0.2 against it and beats the runner-up by 0.08, and it never replaces a category the user picked.',
       },
       {
         title: 'Messages',
@@ -240,6 +268,12 @@ export const whistlerWeb: Project = {
           note: 'Plus a Playwright e2e suite.',
         },
         {
+          label: 'Classifier accuracy',
+          basis: 'unavailable',
+          value: null,
+          note: 'Not evaluated yet. The thresholds were set by hand, not tuned on labelled posts.',
+        },
+        {
           label: 'Active users',
           basis: 'unavailable',
           value: null,
@@ -252,6 +286,7 @@ export const whistlerWeb: Project = {
       'Writing down deliberate deviations — the cookie choice, the theme trade-off — next to the code saves the next reviewer from “fixing” them.',
     ],
     next: [
+      'Evaluate the classifier on the mobile app’s labelled sentences, split by sentence, so the two approaches can be compared.',
       'Replace message polling with the socket layer the mobile app already uses.',
       'Add Google and Apple sign-in once the web OAuth clients are set up.',
       'Test a Content-Security-Policy against Google sign-in, Giphy and the socket server.',

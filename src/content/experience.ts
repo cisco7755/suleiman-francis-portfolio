@@ -35,7 +35,7 @@ export const experience: Role[] = [
       'SeamHealth blog: initial Next.js 16 + Sanity implementation with rate limiting, CSP, structured logging and CI.',
       'ELSRT: real-time validation and error handling for lab data entry — manual verification time down by an estimated 30%.',
       'Reusable component libraries adopted across 3+ internal products; weekly PR review across Angular and React — post-release defects down by an estimated 25%.',
-      'Integrated and evaluated LLM features: prompt design, rubric-based review, and hallucination and inconsistency flags.',
+      'LLM evaluation and RLHF: prompt design, rubric-based review, data annotation of model responses, human feedback on those labels, and hallucination and inconsistency flags.',
     ],
     projects: [
       'clientshot',
@@ -43,6 +43,7 @@ export const experience: Role[] = [
       'device-intelligence',
       'seamhealth-blog',
       'elsrt',
+      'llm-evaluation',
     ],
   },
   {
